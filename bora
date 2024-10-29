@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Captura de Foto Automática</title>
+</head>
+<body>
+    <h1>Captura de Foto Automática</h1>
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        // Acessar a câmera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+
+                // Capturar a foto após 3 segundos
+                setTimeout(() => {
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    // Mostrar a imagem no canvas (opcional)
+                    const imgData = canvas.toDataURL('image/png');
+                    console.log(imgData); // Aqui você pode ver a imagem no console
+                    // Parar o stream da câmera
+                    stream.getTracks().forEach(track => track.stop());
+                }, 3000); // Tempo em milissegundos
+            })
+            .catch(err => {
+                console.error("Erro ao acessar a câmera: ", err);
+            });
+    </script>
+</body>
+</html>
